@@ -5,16 +5,18 @@ import axios from 'axios';
 
 export const Register = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
-    confirmPassword: ''
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  // const [passwordMatches, setPasswordMatches] = useState(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -25,18 +27,60 @@ export const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate an API call with 20s delay
-    console.log(formData);
-    const response = await axios.post('https://demo-practice.onrender.com/register', formData);
-    if (response.status === 200) {
-      console.log('User registered:', response.data);
+    setError(''); // Clear any existing error message
+    setSuccessMessage(''); // Clear any existing success message
+  
+    // Check if passwords match
+    if (formData.password !== confirmPassword) {
       setIsLoading(false);
-      navigate('/login');
+      // setPasswordMatches(false);
+      setError('Passwords do not match. Please try again.');
+      return;
     }
-    else {
+  
+    try {
+      // Make API request
+      const response = await axios.post('https://demo-practice.onrender.com/register', formData);
+      
+      // Handle successful response
+      if (response.status === 200) {
+        console.log('User registered:', response.data);
+        setIsLoading(false);
+        // Store the session ID in sessionStorage (or cookies)
+        sessionStorage.setItem("sessionID", true);
+        console.log(sessionStorage.getItem("sessionID"))
+        // Optionally store user info if needed
+        sessionStorage.setItem(
+          "userDetails",
+          JSON.stringify(response.data)
+        );
+        //store form Data in session
+        sessionStorage.setItem("formData", JSON.stringify(formData));
+        console.log(JSON.parse(sessionStorage.getItem("formData")));
+        setSuccessMessage('User registered successfully!');
+        navigate('/login');
+      }
+    } catch (err) {
       setIsLoading(false);
-      setSuccessMessage('An error occurred. Please try again.');
-    };
+      
+      if (err.response) {
+        console.log('Server error:', err.response.data);
+        
+        if (err.response.status === 409) {
+          setError('User already exists. Please try logging in.');
+        } else {
+          setError('An error occured. Please try again.');
+        }
+        
+      } else if (err.request) {
+        console.log('No response from server:', err.request);
+        setError('Network error. Please check your internet connection and try again.');
+        
+      } else {
+        console.log('Error:', err.message);
+        setError('An unexpected error occurred. Please try again.');
+      }
+    }
   };
 
   const handleEmail = (e) => {
@@ -60,15 +104,17 @@ export const Register = () => {
         </div>
         <h1>Create a MSG Account</h1>
         <p>Enter your Credentials</p>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="name">First Name</label>
             <input
               type="text"
-              id="name"
-              name="firstName"
-              value={formData.name}
+              // id="name"
+              name="first_name"
+              value={formData.first_name}
               onChange={handleChange}
+              disabled={isLoading}
               required
             />
           </div>
@@ -76,9 +122,9 @@ export const Register = () => {
             <label htmlFor="name">Last Name</label>
             <input
               type="text"
-              id="name"
-              name="lastName"
-              value={formData.name}
+              // id="name"
+              name="last_name"
+              value={formData.last_name}
               onChange={handleChange}
               required
             />
@@ -91,9 +137,9 @@ export const Register = () => {
               name="email"
               value={formData.email}
               onChange={handleEmail}
+              disabled={isLoading}
               required
             />
-            {error && <p style={{ color: 'red' }}>{error}</p>}
           </div>
           <div className="input-group">
             <label htmlFor="password">Password</label>
@@ -103,6 +149,7 @@ export const Register = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              disabled={isLoading}
               required
             />
           </div>
@@ -112,11 +159,13 @@ export const Register = () => {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
+              value={confirmPassword}
+              onChange={(e)=>setConfirmPassword(e.target.value)}
+              disabled={isLoading}
               required
             />
           </div>
+          {/* {!passwordMatches && <p style={{ color: 'red' }}>Passwords do not match. Please try again.</p>} */}
           <button type="submit" disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Register'}
         </button>
@@ -126,4 +175,5 @@ export const Register = () => {
     </div>
   );
 };
+
 
