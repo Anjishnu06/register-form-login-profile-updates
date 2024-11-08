@@ -16,10 +16,10 @@
   }
   
   .password-container input {
-    width: calc(100% - 20px); /* Adjust based on your layout */
+    width: calc(100% - 20px); 
   }
   
-  .toggle-password-button {
+  .toggle-password-login-button {
     position: absolute;
     right: 10px;
     top: 50%;

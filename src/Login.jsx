@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Login.css"; // Import the shared CSS file
+import "./Login.css";
 
 export const Login = () => {
   const [formData, setFormData] = useState({
@@ -26,16 +26,16 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      // Replace 'https://example.com/api/login' with your actual API endpoint
       const response = await axios.post(
         "https://demo-practice.onrender.com/login",
         formData
       );
 
+      sessionStorage.setItem("email", formData.email);
+      
       if (response.status === 200) {
         console.log("User logged in:", response.data);
         setIsLoading(false);
-        // Redirect to the home page
         navigate("/");
       }
     } catch (err) {
@@ -45,7 +45,7 @@ export const Login = () => {
   };
 
   const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible); // Toggle the password visibility state
+    setIsPasswordVisible(!isPasswordVisible); 
   };
 
   return (
@@ -58,12 +58,6 @@ export const Login = () => {
       </div>
       <h1>Login to MSG Account</h1>
       <p>Enter your credentials to access your account</p>
-
-      {error && (
-        <p className="error-message" style={{ color: "red" }}>
-          {error}
-        </p>
-      )}
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
@@ -91,7 +85,7 @@ export const Login = () => {
             <span
               type="button"
               onClick={togglePasswordVisibility}
-              className="toggle-password-button"
+              className="toggle-password-login-button"
             >
               {isPasswordVisible ? "Hide" : "Show"}
             </span>
@@ -100,6 +94,11 @@ export const Login = () => {
         <button type="submit" disabled={isLoading} className="submit-button">
           {isLoading ? "Logging in..." : "Login"}
         </button>
+        {error && (
+        <p className="error-message" style={{ color: "red" }}>
+          {error}
+        </p>
+      )}
       </form>
     </div>
   );

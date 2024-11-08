@@ -6,15 +6,20 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: 'Roboto', sans-serif;
+    padding-right: 100px;
+    padding-top:50px;
+    padding-bottom:80px;
   }
   
   .container {
     max-width: 600px;
-    width: 100%;
+    width: 120%;
     background-color: white;
     border-radius: 8px;
-    padding: 20px;
+    padding: 15px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    /* margin-top: 50px;
+    margin-bottom: 50px; */
   }
   
   .form-box {
@@ -46,6 +51,10 @@ body {
     flex-direction: column;
     margin-bottom: 15px;
   }
+
+  .password-input{
+    position: relative;
+  }
   
   .input-group label {
     font-size: 12px;
@@ -58,6 +67,19 @@ body {
     border: 1px solid #dadce0;
     border-radius: 4px;
     font-size: 14px;
+  }
+
+  .toggle-password-button{
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-top: 10px;
   }
   
   button {
@@ -90,4 +112,6 @@ body {
       padding: 8px;
     }
   }
+  
+  
   

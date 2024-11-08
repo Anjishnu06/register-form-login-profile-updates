@@ -4,40 +4,45 @@ import { useNavigate } from 'react-router-dom';
 import './Profile.css'
 
 export const Profile = () => {
-  // Retrieve initial user data from localStorage
-  const storedUserData = JSON.parse(sessionStorage.getItem("userDetails")) || {};
-  const formUserData = JSON.parse(sessionStorage.getItem("formData")) || {};
-  const [userData, setUserData] = useState(storedUserData);
-  const [formData, setFormData] = useState(formUserData);
+  const email = sessionStorage.getItem("email");
+  const [userData,setUserData] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const sessionID = sessionStorage.getItem("sessionID");
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`https://demo-practice.onrender.com/userdata/${email}`);
+        setUserData(response.data);
+        sessionStorage.setItem('userDetails', JSON.stringify(response.data));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchData();
+  },[])
+
   useEffect(() => {
-    if(!sessionID){
+    if(!email){
       navigate('/login');
     }
   })
 
   const handleLogout = ()=>{
-     // Clear session data
-    sessionStorage.removeItem("sessionID");
+    sessionStorage.removeItem("email");
     sessionStorage.removeItem("userDetails");
-
-  // Redirect to login page
     navigate("/login");
   }
-  // Handle changes in form inputs
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setUserData({
+      ...userData,
       [e.target.name]: e.target.value
     });
   };
 
-  // Handle form submission for updating user details
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -45,20 +50,16 @@ export const Profile = () => {
     setErrorMessage('');
 
     try {
-      // Update user details with PATCH request
-      const response = await axios.put(`https://demo-practice.onrender.com/edit/${formData.email}`, {
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        email: formData.email,
+      const response = await axios.put(`https://demo-practice.onrender.com/edit/${userData.email}`, {
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        email: userData.email,
+        password: userData.password
       });
 
       if (response.status === 200) {
-        // Update localStorage with the new user data
-        sessionStorage.setItem('userDetails', JSON.stringify(response.data));
-
-        // Set success message and update state
+        console.log('Profile updated:', response.data);
         setSuccessMessage('Profile updated successfully!');
-        setUserData(response.data);
       }
     } catch (err) {
       setErrorMessage('An error occurred while updating the profile.');
@@ -80,7 +81,7 @@ export const Profile = () => {
             type="text"
             id="first_name"
             name="first_name"
-            value={formData.first_name || ''}
+            value={userData.first_name || ''}
             onChange={handleChange}
             disabled={isLoading}
           />
@@ -92,7 +93,7 @@ export const Profile = () => {
             type="text"
             id="last_name"
             name="last_name"
-            value={formData.last_name || ''}
+            value={userData.last_name || ''}
             onChange={handleChange}
             disabled={isLoading}
           />
@@ -104,9 +105,9 @@ export const Profile = () => {
             type="email"
             id="email"
             name="email"
-            value={formData.email || ''}
+            value={userData.email || ''}
             onChange={handleChange}
-            readOnly
+            disabled
           />
         </div>
 
@@ -116,7 +117,7 @@ export const Profile = () => {
             type="password"
             id="password"
             name="password"
-            value={formData.password || ''}
+            value={userData.password || ''}
             onChange={handleChange}
             disabled={isLoading}
           />
@@ -128,6 +129,7 @@ export const Profile = () => {
         <div className="logout-button">
           <button onClick={handleLogout}>Logout</button>
         </div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
     </div>
   );
