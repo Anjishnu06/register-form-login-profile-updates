@@ -36,7 +36,7 @@ export const Login = () => {
       if (response.status === 200) {
         console.log("User logged in:", response.data);
         setIsLoading(false);
-        navigate("/");
+        navigate("/home");
       }
     } catch (err) {
       setError("Invalid email or password. Please try again.");
@@ -95,7 +95,7 @@ export const Login = () => {
           {isLoading ? "Logging in..." : "Login"}
         </button>
         <div className="register-option">
-          <p>Don't have an account? <Link className="register-link" href="/register">Register</Link></p>
+          <p>Don't have an account? <Link className="register-link" to="/">Register</Link></p>
         </div>
         {error && (
         <p className="error-message" style={{ color: "red" }}>
