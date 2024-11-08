@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Register.css"; // Import the CSS file
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import axios from "axios";
 
 export const Register = () => {
@@ -177,6 +177,9 @@ export const Register = () => {
           <button type="submit" disabled={isLoading}>
             {isLoading ? "Loading..." : "Register"}
           </button>
+          <div className="login-option">
+            <p>Already Registered?<Link to="/login" className="login-link">Login</Link></p>
+          </div>
           {successMessage && <p style={{ color: "red" }}>{successMessage}</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
         </form>

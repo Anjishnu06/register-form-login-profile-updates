@@ -113,5 +113,15 @@ body {
     }
   }
   
+  .login-option{
+    display: flex;
+    justify-content: center;
+  }
+
+  .login-link{
+    text-decoration: none;
+    color: #712616;
+    font-weight: bold;
+  }
   
   

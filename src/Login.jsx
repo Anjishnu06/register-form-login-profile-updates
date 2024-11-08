@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
 
@@ -94,6 +94,9 @@ export const Login = () => {
         <button type="submit" disabled={isLoading} className="submit-button">
           {isLoading ? "Logging in..." : "Login"}
         </button>
+        <div className="register-option">
+          <p>Don't have an account? <Link className="register-link" href="/register">Register</Link></p>
+        </div>
         {error && (
         <p className="error-message" style={{ color: "red" }}>
           {error}
