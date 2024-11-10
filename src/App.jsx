@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import {Register} from './Register';
-import { Login } from './Login';
-import { Home } from './Home';
-import { Profile } from './Profile';
+import {Register} from './components/Register';
+import { Login } from './components/Login';
+import { Home } from './components/Home';
+import { Profile } from './components/Profile';
 function App() {
 
   return (
     <>
-      <Router>
+    <Router>
       <Routes>
         <Route path="/" element={<Register />} />
         <Route path="/login" element={<Login />} />
