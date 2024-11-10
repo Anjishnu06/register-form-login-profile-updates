@@ -71,9 +71,6 @@ export const Profile = () => {
   return (
     <div className="profile-container">
       <h2>Profile</h2>
-      {successMessage && <p className="success-message">{successMessage}</p>}
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="first_name">First Name</label>
@@ -129,6 +126,7 @@ export const Profile = () => {
         <div className="logout-button">
           <button onClick={handleLogout}>Logout</button>
         </div>
+        {successMessage && <p className="success-message">{successMessage}</p>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
     </div>
